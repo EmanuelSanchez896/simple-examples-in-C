@@ -1,0 +1,97 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <windows.h>
+#include <conio.h>
+
+typedef struct nodo {
+    int dato;
+    struct nodo *siguiente;
+} Nodo;
+
+Nodo *crearNodo(int dato) {
+    Nodo *nuevoNodo = (Nodo *)malloc(sizeof(Nodo));
+    nuevoNodo->dato = dato;
+    nuevoNodo->siguiente = NULL;
+    return nuevoNodo;
+}
+
+void agregarElemento(Nodo **lista, int dato) {
+    Nodo *nuevoNodo = crearNodo(dato);
+    if(*lista == NULL) {
+        *lista = nuevoNodo;
+    } else {
+        Nodo *temp = *lista;
+        while(temp->siguiente != NULL) {
+            temp = temp->siguiente;
+        }
+        temp->siguiente = nuevoNodo;
+    }
+}
+
+void mostrarElementos(Nodo *lista) {
+    Nodo *temp = lista;
+    printf("\nElementos de la lista:\n");
+    while(temp != NULL) {
+        printf("%d ", temp->dato);
+        temp = temp->siguiente;
+    }
+    printf("\n");
+}
+
+void borrarElemento(Nodo **lista, int dato) {
+    if(*lista != NULL) {
+        Nodo *temp = *lista;
+        Nodo *anterior = NULL;
+        while(temp != NULL && temp->dato != dato) {
+            anterior = temp;
+            temp = temp->siguiente;
+        }
+        if(temp == NULL) {
+            printf("\nElemento no encontrado\n");
+        } else if(anterior == NULL) {
+            *lista = (*lista)->siguiente;
+            free(temp);
+        } else {
+            anterior->siguiente = temp->siguiente;
+            free(temp);
+        }
+    }
+}
+
+int main() {
+    int opcion, elemento;
+    Nodo *lista = NULL;
+
+    do {
+    	system ("cls");
+        printf("\n1. Ingresar elemento a la lista\n");
+        printf("2. Mostrar elementos de la lista\n");
+        printf("3. Borrar elemento de la lista\n");
+        printf("4. Salir\n");
+        printf("Ingrese una opcion: ");
+        scanf("%d", &opcion);
+
+        switch(opcion) {
+            case 1:
+                printf("\nIngrese el elemento a agregar: ");
+                scanf("%d", &elemento);
+                agregarElemento(&lista, elemento);
+                break;
+            case 2:
+                mostrarElementos(lista);
+                getch ();
+                break;
+            case 3:
+                printf("\nIngrese el elemento a borrar: ");
+                scanf("%d", &elemento);
+                borrarElemento(&lista, elemento);
+                break;
+            case 4:
+                exit(0);
+            default:
+                printf("\nOpcion invalida\n");
+        }
+    } while(opcion != 4);
+
+    return 0;
+}
